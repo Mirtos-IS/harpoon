@@ -7,7 +7,7 @@ local M = {}
 M.data_path = data_path
 
 function M.project_key()
-    return vim.loop.cwd()
+  return M.get_os_command_output({"git",  "rev-parse",  "--show-toplevel"})[1]
 end
 
 function M.branch_key()
@@ -15,9 +15,8 @@ function M.branch_key()
     -- widely available command
     local branch = M.get_os_command_output({
         "git",
-        "rev-parse",
-        "--abbrev-ref",
-        "HEAD",
+        "branch",
+        "--show-current",
     })[1]
 
     if branch then
@@ -25,6 +24,9 @@ function M.branch_key()
     else
         return M.project_key()
     end
+end
+
+function M.project_root_dir()
 end
 
 function M.normalize_path(item)
