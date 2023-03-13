@@ -5,9 +5,22 @@ local Job = require("plenary.job")
 local M = {}
 
 M.data_path = data_path
+function M.project_root_dir()
+  return M.get_os_command_output({"git",  "rev-parse",  "--show-toplevel"})[1]
+end
+
 
 function M.project_key()
-    return vim.loop.cwd()
+  local git_root = M.get_os_command_output({
+    "git",
+    "rev-parse",
+    "--show-toplevel"
+  })[1]
+
+  if git_root then
+    return git_root
+  end
+  return vim.loop.cwd()
 end
 
 function M.branch_key()
@@ -20,14 +33,10 @@ function M.branch_key()
     })[1]
 
     if branch then
-        return vim.loop.cwd() .. "-" .. branch
+        return M.project_key() .. "-" .. branch
     else
         return M.project_key()
     end
-end
-
-function M.project_root_dir()
-  return M.get_os_command_output({"git",  "rev-parse",  "--show-toplevel"})[1]
 end
 
 function M.normalize_path(item)
