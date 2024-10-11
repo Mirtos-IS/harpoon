@@ -3,12 +3,11 @@ local data_path = vim.fn.stdpath("data")
 local Job = require("plenary.job")
 
 local M = {}
-local modules = require('lualine.components.branch.git_branch')
 
 M.data_path = data_path
 
 function M.project_key()
-  local git_root = modules.find_git_dir()
+  local git_root = vim.fn['FugitiveGitDir']()
 
   if git_root ~= nil then
     return '/' .. git_root:match('.(.*)/.git')
@@ -19,7 +18,7 @@ end
 function M.branch_key()
     -- `git branch --show-current` requires Git v2.22.0+ so going with more
     -- widely available command
-    local branch = modules.get_branch()
+    local branch = vim.fn['FugitiveHead']()
 
     if branch then
         return M.project_key() .. "-" .. branch
