@@ -16,12 +16,9 @@ function M.project_key()
 end
 
 function M.branch_key()
-    -- `git branch --show-current` requires Git v2.22.0+ so going with more
-    -- widely available command
     local branch = vim.fn['FugitiveHead']()
-    print(branch)
 
-    if branch == "" then
+    if branch ~= "" then
         return M.project_key() .. "-" .. branch
     else
         return M.project_key()
