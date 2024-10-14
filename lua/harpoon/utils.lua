@@ -9,7 +9,7 @@ M.data_path = data_path
 function M.project_key()
   local git_root = vim.fn['FugitiveGitDir']()
 
-  if git_root ~= nil then
+  if git_root ~= "" then
     return '/' .. git_root:match('.(.*)/.git')
   end
   return vim.loop.cwd()
@@ -19,8 +19,9 @@ function M.branch_key()
     -- `git branch --show-current` requires Git v2.22.0+ so going with more
     -- widely available command
     local branch = vim.fn['FugitiveHead']()
+    print(branch)
 
-    if branch then
+    if branch == "" then
         return M.project_key() .. "-" .. branch
     else
         return M.project_key()
